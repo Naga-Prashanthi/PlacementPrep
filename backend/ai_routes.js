@@ -4,7 +4,11 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const User = require('./models/User');
 
 // Middleware to use protection directly mounted
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key'); // Provide real key in .env
+if (!process.env.GEMINI_API_KEY) {
+  console.error("FATAL ERROR: GEMINI_API_KEY is not defined in .env file.");
+  process.exit(1);
+}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 
 

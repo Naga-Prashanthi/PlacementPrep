@@ -18,13 +18,21 @@ app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 
 // ─── DB ───────────────────────────────────────────────────────────────────────
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/placementTracker';
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+  console.error("FATAL ERROR: MONGODB_URI is not defined in .env file.");
+  process.exit(1);
+}
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB error:', err));
 
 // ─── JWT helpers ─────────────────────────────────────────────────────────────
-const JWT_SECRET = process.env.JWT_SECRET || 'placementTrackerSuperSecret2026';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error("FATAL ERROR: JWT_SECRET is not defined in .env file.");
+  process.exit(1);
+}
 
 const generateToken = (id) =>
   jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' });
